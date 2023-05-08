@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "136478453660",
+    "firebase_url": "https://authapp-2104a-default-rtdb.firebaseio.com",
+    "project_id": "authapp-2104a",
+    "storage_bucket": "authapp-2104a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136478453660:android:75fb19320a4839e4c06259",
+        "android_client_info": {
+          "package_name": "com.cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136478453660-lcmem6ie0bof84pghmin68o9e1rsefs5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT80M9UtK0lBNS98uz7WD7AkltdXEIXaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136478453660-lcmem6ie0bof84pghmin68o9e1rsefs5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
