@@ -5,12 +5,14 @@ import firestore from '@react-native-firebase/firestore';
 import {ADD_TO_CART, REMOVE_FROM_CART, REMOVE_All_FROM_CART} from '../redux/reducer/CartReducer';
 
 const useCart = () => {
-  const [initializing, setInitializing] = useState(true);
-  const [cart, setCart] = useState(null);
+  const [initializing, setInitializing] = useState(false);
+  const [cart, setCart] = useState([]);
   const dispatch = useDispatch();
   const userId = auth().currentUser?.uid;
 
   useEffect(() => {
+    console.log("Fetching Cart list");
+    setInitializing(true);
     const unsubscribe = firestore()
       .collection('Cart')
       .where('userId', '==', userId)
@@ -19,35 +21,44 @@ const useCart = () => {
         querySnapshot.forEach(doc => {
           newCart.push({id: doc.id, ...doc.data()});
         });
-        setCart(newCart);
-        console.log('====================================');
-        console.log('@@@@@', newCart);
-        console.log('====================================');
-      });
-      if(initializing) {
         setInitializing(false);
-      }
+        setCart(newCart);
+        // console.log('====================================');
+        console.log('UseCart- Cart length:', newCart.length);
+        dispatch(ADD_TO_CART(newCart));
+
+        // console.log('====================================');
+      });
+      // if(initializing) {
+      //   setInitializing(false);
+      // }
 
     return () => unsubscribe();
-  }, [userId]);
-  console.log("WWWWW", cart);
+  }, []);
+  // console.log("WWWWW", cart);
 
   
   const addToCart = async (productId, quantity, price, name, author, image) => {
+    console.log("Add to Cart");
+    console.log("ProductId", productId);
+    setInitializing(true);
     const existingCartItem = cart?.find(cartItem => cartItem.productId === productId);
+    console.log("existing Cart item: ", existingCartItem);
     if(existingCartItem) {
       await firestore()
       .collection('Cart')
       .doc(existingCartItem.id)
       .update({
-            userId: userId,
-            productId: productId,
+            // userId: userId,
+            // productId: productId,
             quantity: quantity,
-            price: price,
-            name: name,
-            author: author,
-            image: image,
-      });
+            // price: price,
+            // name: name,
+            // author: author,
+            // image: image,
+      }).then(res => console.log("res", res))
+      setInitializing(false);
+      console.log("cart State: ", cart);
     dispatch(ADD_TO_CART(cart));
     } else {
       await firestore()
@@ -60,8 +71,8 @@ const useCart = () => {
             name: name,
             author: author,
             image: image,
-        });
-      dispatch(ADD_TO_CART(cart));
+        })
+        console.log("Add cart State: ", cart.length);
     }
   };
 
@@ -75,22 +86,20 @@ const useCart = () => {
       .collection('Cart')
       .doc(exist.id)
       .delete()
-    dispatch(REMOVE_FROM_CART(cart));
 
   } else {
     await firestore()
     .collection('Cart')
     .doc(exist.id)
     .update({
-          userId: userId,
-            productId: productId,
+          // userId: userId,
+            // productId: productId,
             quantity: quantity,
-            price: price,
-            name: name,
-            author: author,
-            image: image,
-    });
-  dispatch(REMOVE_FROM_CART(cart));   
+            // price: price,
+            // name: name,
+            // author: author,
+            // image: image,
+    })
   }
   };
 
@@ -100,21 +109,21 @@ const useCart = () => {
     const updatedCart = cart.filter(cartItem => cartItem.productId === productId);
     setCart(updatedCart);
     const exist = updatedCart?.find(cartItem => cartItem.productId === productId)
-  if(exist.quantity === 1) {
+    if(exist.quantity === 0) {
     await firestore()
       .collection('Cart')
       .doc(exist.id)
-      .delete()
+      .delete().then(res => console.log("Delete res:"+res));
     dispatch(REMOVE_All_FROM_CART(cart));
   }
 }
-  useEffect(() => {
-    if (initializing) {
-      setInitializing(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (initializing) {
+  //     setInitializing(false);
+  //   }
+  // }, []);
 
-  return {initializing, cart, addToCart, removeFromCart, removeAllFromCart};
+  return {cart, initializing, addToCart, removeFromCart, removeAllFromCart};
 };
 
 export default useCart;

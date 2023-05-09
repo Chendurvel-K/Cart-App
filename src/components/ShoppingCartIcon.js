@@ -12,9 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function ShoppingCartIcon() {
   const navigation = useNavigation();
-  const cartItems = useSelector(state =>
-    state.filter(item => item.quantity > 0),
-  );
+  const cartItems = useSelector(state =>state.cart.items);
   // console.log('cart', cartItems.length);
 
   return (

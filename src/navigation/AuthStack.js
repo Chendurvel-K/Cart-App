@@ -7,6 +7,7 @@ import Register from '../screens/Register';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
+  console.log("Auth stach");
   return (
     // <NavigationContainer>
     <Stack.Navigator>

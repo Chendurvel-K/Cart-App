@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   Button,
+  ActivityIndicator,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -15,6 +16,7 @@ import {
   ADD_TO_CART,
 } from '../redux/types';
 import useCart from '../navigation/useCart';
+import { selectCart } from '../redux/reducer/CartReducer';
 
 function Separator() {
   return <View style={{borderBottomWidth: 1, borderBottomColor: '#a9a9a9'}} />;
@@ -22,62 +24,73 @@ function Separator() {
 
 export default function CartScreen() {  
   const carts = useSelector(state => state.cart.items);
+  console.log("Cart screen item list:"+carts.length);
+  // const carts = useSelector(selectCart);
    const {initializing, cart, addToCart, removeFromCart, removeAllFromCart} = useCart();
   
-  console.log(">>>>>>>>>>", cart);
+  // console.log(">>>>>>>>>>", cart);
   const dispatch = useDispatch();
 
  const handleAddToCart = item1 => {
     item1.quantity = item1.quantity + 1;
-    addToCart(item1.id, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
+    console.log("item quantity", item1.quantity);
+    console.log("item quantity", item1.id);
+
+    addToCart(item1.productId, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
   };
 
   const handleRemoveFromCart = item1 => {
     item1.quantity = item1.quantity - 1;
-    removeFromCart(item1.id, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
+    removeFromCart(item1.productId, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
   };
   
   const handleAllRemoveFromCart = item1 => {
     item1.quantity = 0;
-    removeAllFromCart(item1.id, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
+    removeAllFromCart(item1.productId, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
   };
 
-  const addItemFromCart = item =>
-    dispatch({
-      type: ADD_TO_CART,
-      payload: item,
-    });
+  // const addItemFromCart = item =>
+  //   dispatch({
+  //     type: ADD_TO_CART,
+  //     payload: item,
+  //   });
 
-  const removeItemFromCart = item =>
-    dispatch({
-      type: REMOVE_FROM_CART,
-      payload: item,
-    });
+  // const removeItemFromCart = item =>
+  //   dispatch({
+  //     type: REMOVE_FROM_CART,
+  //     payload: item,
+  //   });
 
-  const removeAllItemFromCart = item =>
-    dispatch({
-      type: REMOVE_ALL_FROM_CART,
-      payload: item,
-    });
+  // const removeAllItemFromCart = item =>
+  //   dispatch({
+  //     type: REMOVE_ALL_FROM_CART,
+  //     payload: item,
+  //   });
 
-    const handleMethodQuantity = (bookId) => {
-    console.log("BookId", bookId.id);
-    const cartItem = cart?.find(item => item.productId === bookId.id); 
-    console.log("HHHHHH", (cartItem));
+  //   const handleMethodQuantity = (bookId) => {
+  //   // console.log("BookId", bookId.id);
+  //   const cartItem = carts?.find(item => item.productId === bookId.id); 
+  //   // console.log("HHHHHH", (cartItem));
 
-    if(cartItem === null || cartItem === undefined) {
-      return 0
-    }
+  //   if(cartItem === null || cartItem === undefined) {
+  //     return 0
+  //   }
 
-    return cartItem.quantity;
-  }
+  //   return cartItem.quantity;
+  // }
 
   return (
-    <View>
-      {carts !== 0 ? (
+    <View style={styles.container}>
+      <View style={{flex: 1,backgroundColor: '#FF7F50', justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{borderRadius: 12, backgroundColor: '#fff', width: "95%", height: "70%", justifyContent: 'center',}}>
+          <Text style={{}}>SubTotal</Text>
+        </View>
+      </View>
+      <View style={{flex: 8}}>
+      {carts.length !== 0 ? (
         <FlatList
           data={carts}
-          // keyExtractor={item => item.id}
+          keyExtractor={item => item.id}
           ItemSeparatorComponent={() => Separator()}
           renderItem={({item}) => (
             <View style={styles.bookItemContainer}>
@@ -129,11 +142,16 @@ export default function CartScreen() {
           </Text>
         </View>
       )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'blue'
+  },
   bookItemContainer: {
     flexDirection: 'row',
     padding: 10,

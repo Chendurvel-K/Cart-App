@@ -4,11 +4,11 @@ import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 
 export function GetProduct() {
-  console.log('====================================');
-  console.log('====================================');
-  console.log('entered ProductService');
-  console.log('====================================');
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log('====================================');
+  // console.log('entered ProductService');
+  // console.log('====================================');
+  // console.log('====================================');
   const [books, setBooks] = useState([]); // Initial empty array of users
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
 
@@ -34,9 +34,9 @@ export function GetProduct() {
   if (loading) {
     return <ActivityIndicator size={'large'} animating={true} />;
   }
-  console.log('====================================');
-  console.log('Getting Book details in firebase', books);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log('Getting Book details in firebase', books);
+  // console.log('====================================');
   return books;
 }
 
