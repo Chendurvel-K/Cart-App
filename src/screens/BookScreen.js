@@ -10,26 +10,46 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {GetProduct} from '../service/ProductService';
-import useAuth from '../navigation/useAuth';
+import firestore from '@react-native-firebase/firestore';
 import useCart from '../navigation/useCart';
+import auth from '@react-native-firebase/auth';
 
 function Separator() {
   return <View style={{borderBottomWidth: 1, borderBottomColor: '#a9a9a9'}} />;
 }
 
 export default function BookScreen() {
-  const books = GetProduct();
-  const dispatch = useDispatch();
-  const {user} = useAuth();
-  const {initializing, cart, addToCart, removeFromCart} = useCart();
-  console.log('====================================');
-  console.log('00000', cart);
-  console.log('====================================');
+  const [loading, setLoading] = useState(false);
+  const [book,setBook] = useState([]);
+  // const userId = auth().currentUser?.uid;
 
-  if (initializing) {
-    return <ActivityIndicator animating={true}/>;
-  }
+  const {cart, addToCart, removeFromCart, initializing} = useCart();
+
+useEffect(() => {
+  setLoading(true);
+    console.log("Fetching book list");
+    const unsubscribe = firestore()
+      .collection('Books')
+      .onSnapshot(querySnapshot => {
+        const books = [];
+        querySnapshot.forEach(documentSnapshot => {
+          books.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setLoading(false)
+        setBook(books);
+        
+      });
+    // Unsubscribe from events when no longer in use
+    return () => unsubscribe();
+  }, []);
+
+
+  // if (initializing) {
+  //   return <ActivityIndicator animating={true}/>;
+  // }
 
   const handleAddToCart = item1 => {
     item1.quantity = item1.quantity + 1;
@@ -42,12 +62,11 @@ export default function BookScreen() {
   };
 
   const handleMethodQuantity = (bookId) => {
-    console.log("BookId", bookId.id);
+    // console.log("BookId", bookId.id);
     const cartItem = cart?.find(item => item.productId === bookId.id); 
-    console.log("HHHHHH", (cartItem));
 
     if(cartItem === null || cartItem === undefined) {
-      return 0
+      return 0;
     }
 
     return cartItem.quantity;
@@ -55,9 +74,10 @@ export default function BookScreen() {
 
   return (
     <View style={styles.container}>
+    {loading && <ActivityIndicator size="large" /> }
       <FlatList
         // horizontal
-        data={books}
+        data={book}
         // keyExtractor={item => item.id}
         ItemSeparatorComponent={() => Separator()}
         renderItem={({item}) => (
@@ -74,6 +94,7 @@ export default function BookScreen() {
               </Text>
               {handleMethodQuantity(item) === 0 ? (
                 <View style={styles.buttonContainer}>
+                {initializing && <ActivityIndicator size='large' /> }
                   <TouchableOpacity
                     onPress={() => handleAddToCart(item)}
                     style={styles.button}>
@@ -82,6 +103,7 @@ export default function BookScreen() {
                 </View>
               ) : (
                 <View style={styles.buttonContainer}>
+                {/* {initializing && <ActivityIndicator size='large' /> } */}
                   <TouchableOpacity
                     onPress={() => handleRemoveFromCart(item)}
                     style={styles.button}>

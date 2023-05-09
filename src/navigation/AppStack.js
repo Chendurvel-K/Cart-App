@@ -35,9 +35,8 @@ const AppStack = () => {
           headerTitleAlign: 'center',
           tabBarShowLabel: true,
           tabBarIcon: ({color, size}) => (
-            <Ionicons name="book-outline" size={size} color={color} />
-          ),
-          // headerRight: props => <ShoppingCartIcon {...props} />,
+            <Ionicons name="book-outline" size={size} color={color} />),
+          headerRight: props => <ShoppingCartIcon {...props} />,
         }}
       />
       <Tab.Screen

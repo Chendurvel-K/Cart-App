@@ -7,21 +7,23 @@ export const cartItemsReducer = createSlice({
   },
   reducers: {
     ADD_TO_CART: (state, action) => {
-      console.log('====================================');
-      console.log('guuuu');
-      console.log('====================================');
+      console.log("Add:"+action.payload.length);
       state.items = action.payload;
     },
     REMOVE_FROM_CART: (state, action) => {
+            console.log("Remove:"+action.payload);
+
       state.items = action.payload;
     },
     REMOVE_All_FROM_CART: (state, action) => {
+            console.log("Remove all:"+action.payload);
+
       state.items = action.payload;
     },
   },
 });
 
 export const {ADD_TO_CART, REMOVE_FROM_CART, REMOVE_All_FROM_CART} = cartItemsReducer.actions;
-// export const selectUser = state => state.auth.user;
+export const selectCart = state => state.cart.items;
 
 export default cartItemsReducer.reducer;

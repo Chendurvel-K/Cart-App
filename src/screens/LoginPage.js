@@ -17,7 +17,7 @@ import useAuth from '../navigation/useAuth';
 export default function LoginPage({navigation}) {
   const dispatch = useDispatch();
   const {initializing, user} = useAuth();
-  const [emailId, setemailId] = useState('');
+  const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
   const [pressed, setPressed] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
@@ -27,7 +27,7 @@ export default function LoginPage({navigation}) {
     let checkEmail = /\S+@\S+\.\S+/;
     let regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
-    setemailId(text);
+    setEmailId(text);
     if (checkEmail.test(text) || regex.test(text)) {
       setCheckValidEmail(false);
     } else {

@@ -18,6 +18,7 @@ const store = configureStore({
 });
 
 export default function App() {
+  console.log("App.js");
   return (
     <Provider store={store}>
       <Routes />
