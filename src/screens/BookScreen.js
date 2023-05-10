@@ -7,116 +7,133 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import firestore from '@react-native-firebase/firestore';
-import useCart from '../navigation/useCart';
-import auth from '@react-native-firebase/auth';
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import firestore from "@react-native-firebase/firestore";
+import useCart from "../navigation/useCart";
+import auth from "@react-native-firebase/auth";
 
 function Separator() {
-  return <View style={{borderBottomWidth: 1, borderBottomColor: '#a9a9a9'}} />;
+  return (
+    <View style={{ borderBottomWidth: 1, borderBottomColor: "#a9a9a9" }} />
+  );
 }
 
 export default function BookScreen() {
   const [loading, setLoading] = useState(false);
-  const [book,setBook] = useState([]);
-  // const userId = auth().currentUser?.uid;
+  const [book, setBook] = useState([]);
+  const { cart, addToCart, removeFromCart, initializing } = useCart();
 
-  const {cart, addToCart, removeFromCart, initializing} = useCart();
-
-useEffect(() => {
-  setLoading(true);
+  useEffect(() => {
+    setLoading(true);
     console.log("Fetching book list");
     const unsubscribe = firestore()
-      .collection('Books')
-      .onSnapshot(querySnapshot => {
+      .collection("Books")
+      .onSnapshot((querySnapshot) => {
         const books = [];
-        querySnapshot.forEach(documentSnapshot => {
+        querySnapshot.forEach((documentSnapshot) => {
           books.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
         });
-        setLoading(false)
+        setLoading(false);
         setBook(books);
-        
       });
-    // Unsubscribe from events when no longer in use
     return () => unsubscribe();
   }, []);
 
+  const handleAddToCart = (item1) => {
+    const cartItem = cart?.find((item) => item.productId === item1.id);
 
-  // if (initializing) {
-  //   return <ActivityIndicator animating={true}/>;
-  // }
+    var quantity = 1;
 
-  const handleAddToCart = item1 => {
-    item1.quantity = item1.quantity + 1;
-    addToCart(item1.id, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
+    if (cartItem) {
+      quantity += cartItem.quantity;
+    }
+
+    addToCart(
+      item1.id,
+      quantity,
+      item1.price,
+      item1.name,
+      item1.author,
+      item1.imgUrl
+    );
   };
 
-  const handleRemoveFromCart = item1 => {
-    item1.quantity = item1.quantity - 1;
-    removeFromCart(item1.id, item1.quantity, item1.price, item1.name, item1.author, item1.imgUrl);
+  const handleRemoveFromCart = (item1) => {
+    const cartItem = cart?.find((item) => item.productId === item1.id);
+    if (cartItem) {
+      removeFromCart(cartItem.id, cartItem.quantity - 1);
+    }
   };
 
   const handleMethodQuantity = (bookId) => {
-    // console.log("BookId", bookId.id);
-    const cartItem = cart?.find(item => item.productId === bookId.id); 
+    const cartItem = cart?.find((item) => item.productId === bookId.id);
 
-    if(cartItem === null || cartItem === undefined) {
+    if (cartItem === null || cartItem === undefined) {
       return 0;
     }
-
     return cartItem.quantity;
-  }
+  };
 
   return (
     <View style={styles.container}>
-    {loading && <ActivityIndicator size="large" /> }
+      {loading && <ActivityIndicator size="large" />}
       <FlatList
         // horizontal
         data={book}
         // keyExtractor={item => item.id}
         ItemSeparatorComponent={() => Separator()}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <View style={styles.bookItemContainer}>
-            <Image source={{uri: item.imgUrl}} style={styles.thumbnail} />
+            <Image source={{ uri: item.imgUrl }} style={styles.thumbnail} />
             <View style={styles.bookItemTextContainer}>
               <Text style={styles.textTitle} numberOfLines={2}>
                 {item.name}
               </Text>
               <Text style={styles.textAuthor}>by {item.author}</Text>
               <Text
-                style={[styles.textAuthor, {fontWeight: '600', paddingTop: 5}]}>
+                style={[
+                  styles.textAuthor,
+                  { fontWeight: "600", paddingTop: 5 },
+                ]}
+              >
                 Price: ${item.price}
               </Text>
               {handleMethodQuantity(item) === 0 ? (
                 <View style={styles.buttonContainer}>
-                {initializing && <ActivityIndicator size='large' /> }
+                  {/* {initializing && <ActivityIndicator size='large' /> } */}
                   <TouchableOpacity
                     onPress={() => handleAddToCart(item)}
-                    style={styles.button}>
+                    style={styles.button}
+                  >
                     <Text style={styles.buttonText}>ADD TO CART</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
                 <View style={styles.buttonContainer}>
-                {/* {initializing && <ActivityIndicator size='large' /> } */}
+                  {/* {initializing && <ActivityIndicator size='large' /> } */}
                   <TouchableOpacity
                     onPress={() => handleRemoveFromCart(item)}
-                    style={styles.button}>
+                    style={styles.button}
+                  >
                     <Text style={styles.buttonText}> - </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => Alert.alert('Product Id: ', item.id)}
-                    style={styles.button}>
-                    <Text style={styles.buttonText}>{handleMethodQuantity(item)}</Text>
+                    onPress={() => Alert.alert("Product Id: ", item.id)}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>
+                      {handleMethodQuantity(item)}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => handleAddToCart(item)}
-                    style={styles.button}>
+                    style={styles.button}
+                  >
                     <Text style={styles.buttonText}> + </Text>
                   </TouchableOpacity>
                 </View>
@@ -132,10 +149,10 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   bookItemContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
   },
   thumbnail: {
@@ -145,24 +162,24 @@ const styles = StyleSheet.create({
   bookItemTextContainer: {
     padding: 5,
     paddingLeft: 10,
-    width: '100%',
+    width: "100%",
   },
   textTitle: {
     fontSize: 22,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   textAuthor: {
     fontSize: 18,
-    fontWeight: '200',
+    fontWeight: "200",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    position: "absolute",
+    justifyContent: "space-between",
     top: 100,
     left: 10,
     // backgroundColor: '#24a0ed',
-    backgroundColor: '#FF7F50',
+    backgroundColor: "#FF7F50",
 
     borderRadius: 8,
     padding: 3,
@@ -174,7 +191,7 @@ const styles = StyleSheet.create({
   buttonText: {
     padding: 0,
     fontSize: 21,
-    color: '#fff',
+    color: "#fff",
     fontWeight: 500,
   },
 });
