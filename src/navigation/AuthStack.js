@@ -1,9 +1,9 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native';
-import LoginPage from '../screens/LoginPage';
-import Register from '../screens/Register';
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import LoginPage from "../screens/LoginPage";
+import Register from "../screens/Register";
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
@@ -16,7 +16,7 @@ const AuthStack = () => {
         component={LoginPage}
         options={{
           headerShown: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
@@ -24,7 +24,7 @@ const AuthStack = () => {
         component={Register}
         options={{
           headerShown: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
         }}
       />
     </Stack.Navigator>
