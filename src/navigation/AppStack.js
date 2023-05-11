@@ -14,12 +14,17 @@ import PaymentScreen from "../screens/PaymentScreen";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const OnStack = () => {
+const AppStack = () => {
   return (
-    <Stack.Navigator initialRouteName="AppStack">
+    <Stack.Navigator
+      initialRouteName="AppStack"
+      screenOptions={{
+        headerTitleAlign: "center",
+      }}
+    >
       <Stack.Screen
-        name="Carts"
-        component={CartScreen}
+        name="Home"
+        component={OnStack}
         options={{
           headerShown: false,
           headerBackVisible: false,
@@ -35,7 +40,7 @@ const OnStack = () => {
   );
 };
 
-const AppStack = () => {
+const OnStack = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -45,7 +50,11 @@ const AppStack = () => {
         // headerStyle: {
         //     backgroundColor: '#FFF',
         //   },
-        tabBarStyle: { backgroundColor: "#FFF" },
+        tabBarStyle: {
+          backgroundColor: "#FFF",
+          borderTopWidth: 1,
+          borderTopColor: "#000",
+        },
         tabBarActiveTintColor: "#FF7F60",
         // headerTintColor: 'white',
       }}
@@ -66,7 +75,7 @@ const AppStack = () => {
       />
       <Tab.Screen
         name="Cart"
-        component={OnStack}
+        component={CartScreen}
         options={{
           headerShown: true,
           headerTitleAlign: "center",
