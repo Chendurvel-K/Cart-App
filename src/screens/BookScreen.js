@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import firestore from "@react-native-firebase/firestore";
 import useCart from "../navigation/useCart";
 import auth from "@react-native-firebase/auth";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { SearchBar } from "react-native-elements";
 
 function Separator() {
   return (
@@ -81,6 +84,16 @@ export default function BookScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.searchContainer}>
+        <TextInput placeholder="Search" style={styles.searchInput} />
+        {/* <SearchBar placeholder="Search" style={styles.searchInput} /> */}
+        <TouchableOpacity
+          style={styles.searchIcon}
+          onPress={() => alert("Search")}
+        >
+          <Ionicons name="search-outline" size={30} />
+        </TouchableOpacity>
+      </View>
       {loading && <ActivityIndicator size="large" />}
       <FlatList
         // horizontal
@@ -193,6 +206,28 @@ const styles = StyleSheet.create({
     fontSize: 21,
     color: "#fff",
     fontWeight: 500,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#FF7F50",
+    borderBottomWidth: 3,
+    borderBottomColor: "#1222",
+    // borderRadius: 12,
+  },
+  searchInput: {
+    backgroundColor: "#FFF",
+    margin: 10,
+    width: "80%",
+    borderRadius: 12,
+    padding: 12,
+  },
+  searchIcon: {
+    backgroundColor: "#FFF",
+    margin: 10,
+    // width: "20%",
+    borderRadius: 12,
+    padding: 8,
   },
 });
 

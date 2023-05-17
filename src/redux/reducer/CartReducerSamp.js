@@ -1,19 +1,19 @@
-import firestore from '@react-native-firebase/firestore';
-import {ADD_TO_CART, REMOVE_ALL_FROM_CART, REMOVE_FROM_CART} from '../types';
-const name = 'cart';
+import firestore from "@react-native-firebase/firestore";
+import { ADD_TO_CART, REMOVE_ALL_FROM_CART, REMOVE_FROM_CART } from "../types";
+const name = "cart";
 const initialState = [];
 const cartItemsReducer = (state = initialState, action) => {
   // name: 'cart';
   switch (action.type) {
     case ADD_TO_CART:
       const cart = action.payload.cart;
-      if (cart === 'undefined') {
+      if (cart === "undefined") {
         if (cart.productId === action.payload.item.id) {
           action.payload.item.quantity = action.payload.item.quantity + 1;
-          console.log('====================================');
-          console.log('<><><><><><><>', action.payload.item.quantity);
-          console.log('====================================');
-          return {...state};
+          console.log("====================================");
+          console.log("<><><><><><><>", action.payload.item.quantity);
+          console.log("====================================");
+          return { ...state };
 
           // const cartItem = cart.filter(
           //   item => item.productId === action.payload.item.id,
@@ -44,19 +44,19 @@ const cartItemsReducer = (state = initialState, action) => {
             quantity: action.payload.item.quantity,
             price: action.payload.item.price,
           };
-          console.log('====================================');
-          console.log('lllll', JSON.stringify(item));
-          console.log('====================================');
-          const pushNewItem = firestore().collection('Cart');
+          console.log("====================================");
+          console.log("lllll", JSON.stringify(item));
+          console.log("====================================");
+          const pushNewItem = firestore().collection("Cart");
           pushNewItem
             .add(item)
             .then(() => {
-              console.log('User updated!');
+              console.log("User updated!");
             })
-            .catch(error => {
-              console.log('User updated!', error);
+            .catch((error) => {
+              console.log("User updated!", error);
             });
-          return {...state, pushNewItem};
+          return { ...state, pushNewItem };
         }
       }
   }
