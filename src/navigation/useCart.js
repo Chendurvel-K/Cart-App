@@ -11,6 +11,7 @@ import {
 const useCart = () => {
   const [initializing, setInitializing] = useState(false);
   const [cart, setCart] = useState([]);
+  const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
   const userId = auth().currentUser?.uid;
 
@@ -33,6 +34,33 @@ const useCart = () => {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection("users")
+      .doc(userId)
+      .onSnapshot((documentSnapshot) => {
+        console.log("User data: ", documentSnapshot.data());
+        setUsers(documentSnapshot.data());
+      });
+
+    // Stop listening for updates when no longer required
+    return () => subscriber();
+  }, [userId]);
+
+  // useEffect(() => {
+  //   const unsubscribe = firestore()
+  //     .collection("users")
+  //     .where("userId" == userId)
+  //     .onSnapshot((querySnapshot) => {
+  //       const user = [];
+  //       querySnapshot.forEach((doc) => {
+  //         user.push({ id: doc.id, ...doc.data() });
+  //       });
+  //       setUsers(user);
+  //     });
+  //   return () => unsubscribe();
+  // }, []);
 
   const addToCart = async (productId, quantity, price, name, author, image) => {
     setInitializing(true);
@@ -97,7 +125,14 @@ const useCart = () => {
     }
   }, []);
 
-  return { cart, initializing, addToCart, removeFromCart, removeAllFromCart };
+  return {
+    cart,
+    users,
+    initializing,
+    addToCart,
+    removeFromCart,
+    removeAllFromCart,
+  };
 };
 
 export default useCart;

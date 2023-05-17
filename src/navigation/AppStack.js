@@ -85,7 +85,7 @@ const OnStack = () => {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Search"
         component={SearchScreen}
         options={{
@@ -94,7 +94,7 @@ const OnStack = () => {
             <Ionicons name="search-outline" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
