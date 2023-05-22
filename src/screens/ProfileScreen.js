@@ -1,49 +1,16 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import auth, { firebase } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import auth from "@react-native-firebase/auth";
 import { useDispatch } from "react-redux";
 import { signOut } from "../redux/reducer/authReducer";
 import useAuth from "../navigation/useAuth";
 import useCart from "../navigation/useCart";
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = () => {
   const dispatch = useDispatch();
-  // const [users, setUsers] = useState();
-  const { initializing, user } = useAuth();
+  const { user } = useAuth();
   const { users } = useCart();
-  const userId = auth().currentUser?.uid;
-
-  // useEffect(() => {
-  //   const unsubscribe = firestore().collection("users");
-  //   unsubscribe.doc(userId).get();
-  //   console.log("get Users", unsubscribe);
-  // });
-
-  // useEffect(() => {
-  //   const subscriber = firestore()
-  //     .collection("users")
-  //     .doc(userId)
-  //     .onSnapshot((documentSnapshot) => {
-  //       console.log("User data: ", documentSnapshot.data());
-  //       setUsers(documentSnapshot.data());
-  //     });
-
-  //   // Stop listening for updates when no longer required
-  //   return () => subscriber();
-  // }, [userId]);
 
   const handleSignOut = () => {
-    // if (!initializing) {
-    //   console.log("Loadding");
-    //   return <ActivityIndicator size={"large"} />;
-    // }
     auth()
       .signOut()
       .then(() => {

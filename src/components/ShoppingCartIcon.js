@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import useCart from "../navigation/useCart";
 
