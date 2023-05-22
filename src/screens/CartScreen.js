@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,17 +6,9 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Button,
-  ActivityIndicator,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  REMOVE_FROM_CART,
-  REMOVE_ALL_FROM_CART,
-  ADD_TO_CART,
-} from "../redux/types";
+import { useDispatch } from "react-redux";
 import useCart from "../navigation/useCart";
-import { selectCart } from "../redux/reducer/CartReducer";
 
 function Separator() {
   return (
@@ -25,13 +17,7 @@ function Separator() {
 }
 
 export default function CartScreen({ navigation }) {
-  // const {items} = useSelector(state => state.cart);
-  // console.log("Cart screen item list:"+items.length);
-  // const carts = useSelector(selectCart);
-  const { cart, initializing, addToCart, removeFromCart, removeAllFromCart } =
-    useCart();
-
-  // console.log(">>>>>>>>>>", cart);
+  const { cart, addToCart, removeFromCart, removeAllFromCart } = useCart();
   const dispatch = useDispatch();
 
   const handleAddToCart = (item1) => {
@@ -85,7 +71,6 @@ export default function CartScreen({ navigation }) {
         {cart.length !== 0 ? (
           <FlatList
             data={cart}
-            // keyExtractor={item => item.id}
             ItemSeparatorComponent={() => Separator()}
             renderItem={({ item }) => (
               <View style={styles.bookItemContainer}>
@@ -125,7 +110,6 @@ export default function CartScreen({ navigation }) {
                     >
                       <Text style={styles.buttonText}>Delete</Text>
                     </TouchableOpacity>
-                    {/* </View> */}
                   </View>
                 </View>
               </View>
@@ -134,7 +118,6 @@ export default function CartScreen({ navigation }) {
         ) : (
           <View style={styles.emptyCartContainer}>
             <Text style={styles.emptyCartMessage}>
-              {/* Your cart is Empty */}
               <Image
                 source={{
                   uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2dRql5xwTZNAE4rSZ3sTJScYDjdu7wI3XDKrrLCMB8g&usqp=CAU&ec=48600113",
@@ -236,23 +219,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     top: 110,
     left: 10,
-    // width: 250,
     borderRadius: 8,
-    // backgroundColor: '#ff333390',
     backgroundColor: "#FF7F50",
   },
-  // deleteButton: {
-  //   position: 'absolute',
-  //   top: 110,
-  //   right: 2,
-  //   borderRadius: 8,
-  //   backgroundColor: '#ff333390',
-  // },
   button: {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 8,
-    // backgroundColor: '#ff333390',
     padding: 5,
     paddingHorizontal: 10,
     marginHorizontal: 5,
@@ -262,7 +235,6 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   emptyCartContainer: {
-    // marginTop: 250,
     justifyContent: "center",
     alignItems: "center",
   },

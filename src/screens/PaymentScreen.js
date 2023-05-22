@@ -43,26 +43,18 @@ const PaymentScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.listContainer}>
-          {/* <FlatList
-            data={cart}
-            ItemSeparatorComponent={Separator}
-            renderItem={({ item }) => ( */}
           {cart.map((item) => (
             <View key={item.id} style={styles.itemContainer}>
               <View
                 style={{
                   flex: 10,
-                  // backgroundColor: "green",
                   borderRadius: 12,
                   justifyContent: "center",
-                  // paddingHorizontal: 20,
                 }}
               >
                 <Text
                   numberOfLines={2}
                   style={{
-                    // backgroundColor: "red",
-                    // marginHorizontal: 0,
                     padding: 15,
                   }}
                 >
@@ -72,40 +64,20 @@ const PaymentScreen = () => {
               <View
                 style={{
                   flex: 2,
-                  // backgroundColor: "grey",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <Text
-                  style={
-                    {
-                      // backgroundColor: "blue",
-                      // padding: 10,
-                    }
-                  }
-                >
-                  {item.quantity}
-                </Text>
+                <Text>{item.quantity}</Text>
               </View>
               <View
                 style={{
                   flex: 3,
-                  // backgroundColor: "#000",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Text
-                  style={
-                    {
-                      // backgroundColor: "yellow",
-                      // padding: 10,
-                    }
-                  }
-                >
-                  {item.price * item.quantity}
-                </Text>
+                <Text>{item.price * item.quantity}</Text>
               </View>
             </View>
           ))}
@@ -142,8 +114,6 @@ const PaymentScreen = () => {
             flexDirection: "row",
             borderRadius: 12,
             backgroundColor: "#FFF",
-            // width: "95%",
-            // height: "70%",
             margin: 20,
             padding: 10,
             justifyContent: "space-around",
@@ -196,7 +166,6 @@ export default PaymentScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "red",
     justifyContent: "space-between",
   },
   titleContainer: {
@@ -224,87 +193,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
-// import { ScrollView, StyleSheet, Text, View } from "react-native";
-// import React, { useState } from "react";
-// import useCart from "../navigation/useCart";
-// import { CheckBox } from "react-native-elements";
-
-// function Separator() {
-//   return (
-//     <View style={{ borderBottomWidth: 1, borderBottomColor: "#a9a9a9" }} />
-//   );
-// }
-
-// const PaymentScreen = () => {
-//   const { cart } = useCart();
-//   const [isChecked, setIsChecked] = useState(false);
-//   console.log("cart", cart);
-//   return (
-//     <View style={styles.container}>
-//       <ScrollView>
-//         <View style={styles.listContainer}>
-//           {cart.map((item) => (
-//             <View key={item.id} style={styles.itemContainer}>
-//               <View
-//                 style={{
-//                   flex: 10,
-//                   borderRadius: 12,
-//                   justifyContent: "center",
-//                   padding: 15,
-//                 }}
-//               >
-//                 <Text numberOfLines={2}>{item.name}</Text>
-//               </View>
-//               <View
-//                 style={{
-//                   flex: 2,
-//                   alignItems: "center",
-//                   justifyContent: "center",
-//                 }}
-//               >
-//                 <Text>{item.quantity}</Text>
-//               </View>
-//               <View
-//                 style={{
-//                   flex: 3,
-//                   justifyContent: "center",
-//                   alignItems: "center",
-//                 }}
-//               >
-//                 <Text>{item.price * item.quantity}</Text>
-//               </View>
-//             </View>
-//           ))}
-//         </View>
-//         <View style={[styles.listContainer, { padding: 20 }]}>
-//           <CheckBox title={"Debit/Credit Card"} />
-//           <CheckBox title={"UPI Payment"} />
-//           <CheckBox title={"Wallet Pay"} />
-//           <CheckBox title={"Cash on Delivery"} />
-//         </View>
-//       </ScrollView>
-//     </View>
-//   );
-// };
-
-// export default PaymentScreen;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "space-between",
-//   },
-//   listContainer: {
-//     backgroundColor: "#FFF",
-//     borderRadius: 12,
-//     margin: 20,
-//   },
-//   itemContainer: {
-//     flexDirection: "row",
-//     justifyContent: "space-around",
-//     alignItems: "stretch",
-//     margin: 0,
-//     padding: 10,
-//   },
-// });
