@@ -92,13 +92,68 @@ const useCart = () => {
     const exist = updatedCart?.find(
       (cartItem) => cartItem.productId === productId
     );
-    console.log("Remoce all exist", exist);
+    console.log("Remove all exist", exist);
     await firestore()
       .collection("Cart")
       .doc(exist.id)
       .delete()
       .then((res) => console.log("Delete res:" + res));
   };
+
+  // const deleteItemsFromCart = async () => {
+  //   await.firestore()
+  //     .collection("Cart")
+  //     .where("userId", "==", userId)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         doc.ref.delete();
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error", error);
+  //     });
+  // };
+
+  // const orderListPost = async() => {
+  //    setInitializing(true);
+  //    const existingCartItem = cart?.find(
+  //      (cartItem) => cartItem.productId === productId
+  //    );
+  //    console.log("existing Cart item: ", existingCartItem);
+  //    if (existingCartItem) {
+  //      await firestore()
+  //        .collection("PaymentOrders")
+  //        .doc(existingCartItem.id)
+  //        .update({
+  //          quantity: quantity,
+  //        })
+  //        .then((res) => console.log("res", res));
+  //      setInitializing(false);
+  //      console.log("cart State: ", cart);
+  //      dispatch(ADD_TO_CART(cart));
+  //    } else {
+  //      await firestore().collection("Cart").add({
+  //        userId: userId,
+  //        productId: productId,
+  //        quantity: quantity,
+  //        price: price,
+  //        name: name,
+  //        author: author,
+  //        image: image,
+  //      });
+  //      console.log("Add cart State: ", cart.length);
+  //    }
+  // };
+
+  const orderListPost = async (orderId) => {
+    await firestore().collection("orders").add({
+      orderId,
+      userId: userId,
+      // orderedBy: orderedBy,
+    });
+  };
+
   useEffect(() => {
     if (initializing) {
       setInitializing(false);
@@ -112,6 +167,7 @@ const useCart = () => {
     addToCart,
     removeFromCart,
     removeAllFromCart,
+    orderListPost,
   };
 };
 

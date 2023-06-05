@@ -6,16 +6,18 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  TouchableHighlight,
 } from "react-native";
 import React, { useState } from "react";
 import useCart from "../navigation/useCart";
 import { CheckBox } from "react-native-elements";
+import RazorpayCheckout from "react-native-razorpay";
 
 function Separator() {
   return <View style={{ borderBottomWidth: 1, borderBottomColor: "#1222" }} />;
 }
 
-const PaymentScreen = () => {
+const PaymentScreen = ({ navigation }) => {
   const { cart } = useCart();
   const [checked, setChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -31,6 +33,33 @@ const PaymentScreen = () => {
       SubTotal += cart[i].price * cart[i].quantity;
     }
     return SubTotal;
+  };
+  const amount = handleSubtotal() * 100;
+  console.log("Amount", amount);
+
+  const paymentHandle = () => {
+    var options = {
+      description: "Credits towards consultation",
+      image: "https://i.imgur.com/3g7nmJC.jpg",
+      currency: "INR",
+      key: "rzp_test_YNYdscDOJHJgfy",
+      amount: amount,
+      name: "ChendurVel",
+      // order_id: "order_LvSnpkAl4wfQsl", //Replace this with an order_id created using Orders API.
+
+      theme: { color: "#53a20e" },
+    };
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        // alert(`Success: ${data.razorpay_payment_id}`);
+        navigation.navigate("Book");
+      })
+      .catch((error) => {
+        // handle failure
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
+    return options;
   };
 
   const handlePayment = () => {
@@ -82,7 +111,7 @@ const PaymentScreen = () => {
             </View>
           ))}
         </View>
-        <View style={[styles.listContainer, { padding: 20 }]}>
+        {/* <View style={[styles.listContainer, { padding: 20 }]}>
           <CheckBox
             title={"Debit/Credit Card"}
             checked={checked}
@@ -107,7 +136,7 @@ const PaymentScreen = () => {
             onPress={() => setIsSelected(!isSelected)}
             checkedColor="#FF7F50"
           />
-        </View>
+        </View> */}
         <View
           style={{
             flex: 1,
@@ -131,8 +160,30 @@ const PaymentScreen = () => {
             SubTotal $ {handleSubtotal()}{" "}
           </Text>
           {cart.length !== 0 ? (
-            <TouchableOpacity
-              onPress={() => handlePayment()}
+            <TouchableHighlight
+              onPress={paymentHandle}
+              // onPress={() => {
+              //   var options = {
+              //     description: "Credits towards consultation",
+              //     image: "https://i.imgur.com/3g7nmJC.jpg",
+              //     currency: "INR",
+              //     key: "rzp_test_YNYdscDOJHJgfy",
+              //     amount: amount,
+              //     name: "ChendurVel",
+              //     // order_id: "order_LvSnpkAl4wfQsl", //Replace this with an order_id created using Orders API.
+
+              //     theme: { color: "#53a20e" },
+              //   };
+              //   RazorpayCheckout.open(options)
+              //     .then((data) => {
+              //       // handle success
+              //       alert(`Success: ${data.razorpay_payment_id}`);
+              //     })
+              //     .catch((error) => {
+              //       // handle failure
+              //       alert(`Error: ${error.code} | ${error.description}`);
+              //     });
+              // }}
               style={{
                 borderRadius: 12,
                 backgroundColor: "#FF7F50",
@@ -151,11 +202,37 @@ const PaymentScreen = () => {
               >
                 Pay
               </Text>
-            </TouchableOpacity>
+            </TouchableHighlight>
           ) : (
             <TouchableOpacity disabled={true} />
           )}
         </View>
+        {/* <TouchableHighlight
+          onPress={() => {
+            var options = {
+              description: "Credits towards consultation",
+              image: "https://i.imgur.com/3g7nmJC.jpg",
+              currency: "INR",
+              key: "rzp_test_YNYdscDOJHJgfy",
+              amount: "1",
+              name: "ChendurVel",
+              order_id: "order_LvSnpkAl4wfQsl", //Replace this with an order_id created using Orders API.
+
+              theme: { color: "#53a20e" },
+            };
+            RazorpayCheckout.open(options)
+              .then((data) => {
+                // handle success
+                alert(`Success: ${data.razorpay_payment_id}`);
+              })
+              .catch((error) => {
+                // handle failure
+                alert(`Error: ${error.code} | ${error.description}`);
+              });
+          }}
+        >
+          <Text>pay</Text>
+        </TouchableHighlight> */}
       </ScrollView>
     </SafeAreaView>
   );

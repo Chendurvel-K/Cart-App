@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileScreen from "../screens/ProfileScreen";
 import PaymentScreen from "../screens/PaymentScreen";
+import BookProfileScreen from "../screens/BookProfileScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,7 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen name="Payment" component={PaymentScreen} />
+      <Stack.Screen name="BookProfile" component={BookProfileScreen} />
     </Stack.Navigator>
   );
 };
