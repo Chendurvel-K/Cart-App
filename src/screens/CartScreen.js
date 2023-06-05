@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import useCart from "../navigation/useCart";
+import firestore from "@react-native-firebase/firestore";
+import RazorpayCheckout from "react-native-razorpay";
+import auth from "@react-native-firebase/auth";
 
 function Separator() {
   return (
@@ -17,8 +20,34 @@ function Separator() {
 }
 
 export default function CartScreen({ navigation }) {
-  const { cart, addToCart, removeFromCart, removeAllFromCart } = useCart();
+  const { cart, addToCart, removeFromCart, removeAllFromCart, orderListPost } =
+    useCart();
   const dispatch = useDispatch();
+  const userId = auth().currentUser?.uid;
+  console.log("Cart", cart);
+  // useEffect(() => {
+  //   const subscribe = firestore()
+  //     .collection("Cart")
+  //     .doc.then((response) => {
+  //       console.log("Delete Response", response);
+  //     });
+  //   return subscribe();
+  // }, []);
+
+  const deleteItemsFromCart = () => {
+    firestore()
+      .collection("Cart")
+      .where("userId", "==", userId)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.delete();
+        });
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+  };
 
   const handleAddToCart = (item1) => {
     item1.quantity = item1.quantity + 1;
@@ -58,6 +87,40 @@ export default function CartScreen({ navigation }) {
     }
     return SubTotal;
   };
+
+  // const deleteCartItem = () => {};
+
+  const paymentHandle = () => {
+    var options = {
+      description: "Credits towards consultation",
+      image: "https://i.imgur.com/3g7nmJC.jpg",
+      currency: "INR",
+      key: "rzp_test_YNYdscDOJHJgfy",
+      amount: amount,
+      name: "ChendurVel",
+      // order_id: "order_LvSnpkAl4wfQsl", //Replace this with an order_id created using Orders API.
+
+      theme: { color: "#53a20e" },
+    };
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        // alert(`Success: ${data.razorpay_payment_id}`);
+        console.log("data", data);
+        orderListPost(data);
+        deleteItemsFromCart();
+        navigation.navigate("Book");
+      })
+      .catch((error) => {
+        // handle failure
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
+    console.log("options", options);
+    return options;
+  };
+
+  const amount = handleSubtotal() * 100;
+  console.log("Amount", amount);
 
   const handlePayment = () => {
     if (cart.length > 0) {
@@ -143,7 +206,8 @@ export default function CartScreen({ navigation }) {
             backgroundColor: "#FFF",
             width: "95%",
             height: "70%",
-            justifyContent: "center",
+            // {...cart.length ==0 ? (justifyContent: "center") :(justifyContent: 'space-between')}
+            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
@@ -152,16 +216,19 @@ export default function CartScreen({ navigation }) {
               color: "#000",
               fontWeight: "bold",
               fontSize: 20,
-              marginLeft: 8,
+              marginLeft: 12,
+              // marginRight: 50,
             }}
           >
-            SubTotal $ {handleSubtotal()}{" "}
+            Total $ {handleSubtotal()}
           </Text>
           {cart.length !== 0 ? (
             <TouchableOpacity
-              onPress={() => handlePayment()}
+              onPress={() => paymentHandle()}
               style={{
                 borderRadius: 12,
+                marginRight: 12,
+                // marginLeft: 50,
                 backgroundColor: "#FF7F50",
                 alignItems: "center",
               }}
@@ -171,12 +238,11 @@ export default function CartScreen({ navigation }) {
                   color: "#FFF",
                   fontWeight: "bold",
                   fontSize: 20,
-                  marginLeft: 0,
                   padding: 10,
                   paddingHorizontal: 40,
                 }}
               >
-                Proceed to Buy
+                Pay
               </Text>
             </TouchableOpacity>
           ) : (

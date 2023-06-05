@@ -5,11 +5,13 @@ import AuthStack from "./AuthStack";
 import { useDispatch } from "react-redux";
 import auth from "@react-native-firebase/auth";
 import { signIn, signOut } from "../redux/reducer/authReducer";
+import useCart from "./useCart";
 
 const Routes = () => {
   console.log("Routes");
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
+  const { cart } = useCart();
 
   const onAuthStateChanged = (user) => {
     setUser(user);

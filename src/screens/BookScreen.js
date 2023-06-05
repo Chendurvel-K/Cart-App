@@ -20,10 +20,11 @@ function Separator() {
   );
 }
 
-export default function BookScreen() {
+export default function BookScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState([]);
   const { cart, addToCart, removeFromCart } = useCart();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -79,10 +80,21 @@ export default function BookScreen() {
     return cartItem.quantity;
   };
 
+  // const filterSearch = book.filter((item) =>
+  //   item.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <TextInput placeholder="Search" style={styles.searchInput} />
+        <TextInput
+          placeholder="Search"
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+          }}
+        />
         <TouchableOpacity
           style={styles.searchIcon}
           onPress={() => alert("Search")}
@@ -91,61 +103,125 @@ export default function BookScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* <FlatList
+        data={filterSearch}
+        ItemSeparatorComponent={() => Separator()}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("BookProfile", { item })}
+          >
+            <View style={styles.bookItemContainer}>
+              <Image source={{ uri: item.imgUrl }} style={styles.thumbnail} />
+              <View style={styles.bookItemTextContainer}>
+                <Text style={styles.textTitle} numberOfLines={2}>
+                  {item.name}
+                </Text>
+                <Text style={styles.textAuthor}>by {item.author}</Text>
+                <Text
+                  style={[
+                    styles.textAuthor,
+                    { fontWeight: "600", paddingTop: 5 },
+                  ]}
+                >
+                  Price: ${item.price}
+                </Text>
+                {handleMethodQuantity(item) === 0 ? (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      onPress={() => handleAddToCart(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}>ADD TO CART</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      onPress={() => handleRemoveFromCart(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}> - </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => Alert.alert("Product Id:  " + item.id)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}>
+                        {handleMethodQuantity(item)}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleAddToCart(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}> + </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      /> */}
       {loading && <ActivityIndicator size="large" />}
       <FlatList
         data={book}
         ItemSeparatorComponent={() => Separator()}
         renderItem={({ item }) => (
-          <View style={styles.bookItemContainer}>
-            <Image source={{ uri: item.imgUrl }} style={styles.thumbnail} />
-            <View style={styles.bookItemTextContainer}>
-              <Text style={styles.textTitle} numberOfLines={2}>
-                {item.name}
-              </Text>
-              <Text style={styles.textAuthor}>by {item.author}</Text>
-              <Text
-                style={[
-                  styles.textAuthor,
-                  { fontWeight: "600", paddingTop: 5 },
-                ]}
-              >
-                Price: ${item.price}
-              </Text>
-              {handleMethodQuantity(item) === 0 ? (
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    onPress={() => handleAddToCart(item)}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}>ADD TO CART</Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    onPress={() => handleRemoveFromCart(item)}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}> - </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => Alert.alert("Product Id: ", item.id)}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}>
-                      {handleMethodQuantity(item)}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleAddToCart(item)}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}> + </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("BookProfile", { item })}
+          >
+            <View style={styles.bookItemContainer}>
+              <Image source={{ uri: item.imgUrl }} style={styles.thumbnail} />
+              <View style={styles.bookItemTextContainer}>
+                <Text style={styles.textTitle} numberOfLines={2}>
+                  {item.name}
+                </Text>
+                <Text style={styles.textAuthor}>by {item.author}</Text>
+                <Text
+                  style={[
+                    styles.textAuthor,
+                    { fontWeight: "600", paddingTop: 5 },
+                  ]}
+                >
+                  Price: ${item.price}
+                </Text>
+                {handleMethodQuantity(item) === 0 ? (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      onPress={() => handleAddToCart(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}>ADD TO CART</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      onPress={() => handleRemoveFromCart(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}> - </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => Alert.alert("Product Id:  " + item.id)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}>
+                        {handleMethodQuantity(item)}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleAddToCart(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}> + </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
